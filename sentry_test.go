@@ -1,4 +1,4 @@
-package zapsentry
+package sentry
 
 import (
 	"sync"

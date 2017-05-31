@@ -1,4 +1,4 @@
-package zapsentry
+package sentry
 
 import (
 	raven "github.com/getsentry/raven-go"
