@@ -22,6 +22,11 @@ type option struct {
 	sentrtFields []zapcore.Field
 }
 
+func init() {
+	l, _ := zap.NewDevelopment()
+	logger = l.Sugar()
+}
+
 func WithSentry(sentryDNS string, tags map[string]string, fields []zapcore.Field) Option {
 	return func(o *option) {
 		o.sentryDns = sentryDNS
