@@ -16,7 +16,7 @@ var logger *zap.SugaredLogger
 type Option func(o *option)
 
 type option struct {
-	state        string
+	stage        string
 	sentryDns    string
 	sentryTags   map[string]string
 	sentrtFields []zapcore.Field
@@ -30,9 +30,9 @@ func WithSentry(sentryDNS string, tags map[string]string, fields []zapcore.Field
 	}
 }
 
-func WithState(state string) Option {
+func WithStage(stage string) Option {
 	return func(o *option) {
-		o.state = state
+		o.stage = stage
 	}
 }
 
@@ -82,7 +82,7 @@ func New(opts ...Option) *zap.SugaredLogger {
 		opt(o)
 	}
 
-	l := newzap(o.state)
+	l := newzap(o.stage)
 	addSentry(l, o)
 
 	return l.Sugar()
