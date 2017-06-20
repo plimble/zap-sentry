@@ -11,7 +11,7 @@ const (
 	Nop         = "nop"
 )
 
-var Default *zap.SugaredLogger
+var logger *zap.SugaredLogger
 
 type Option func(o *option)
 
@@ -24,7 +24,7 @@ type option struct {
 
 func init() {
 	l, _ := zap.NewDevelopment()
-	Default = l.Sugar()
+	logger = l.Sugar()
 }
 
 func WithSentry(sentryDNS string, tags map[string]string, fields []zapcore.Field) Option {
@@ -39,6 +39,10 @@ func WithStage(stage string) Option {
 	return func(o *option) {
 		o.stage = stage
 	}
+}
+
+func S() *zap.SugaredLogger {
+	return logger
 }
 
 func newzap(stage string) *zap.Logger {
@@ -78,7 +82,7 @@ func addSentry(l *zap.Logger, o *option) {
 }
 
 func NewDefault(opts ...Option) {
-	Default = New(opts...)
+	logger = New(opts...)
 }
 
 func New(opts ...Option) *zap.SugaredLogger {
