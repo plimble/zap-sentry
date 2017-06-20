@@ -59,9 +59,10 @@ func newzap(stage string) *zap.Logger {
 	return l
 }
 
-func addSentry(l *zap.Logger, o *option) {
+func createLoagger(o *option) *zap.Logger {
+	l := newzap(o.stage)
 	if o.sentryDns == "" || o.sentryDns == "test" {
-		return
+		return l
 	}
 
 	cfg := Configuration{
@@ -76,7 +77,8 @@ func addSentry(l *zap.Logger, o *option) {
 	if o.sentrtFields != nil && len(o.sentrtFields) > 0 {
 		sentryCore = sentryCore.With(o.sentrtFields)
 	}
-	l = l.WithOptions(zap.WrapCore(func(core zapcore.Core) zapcore.Core {
+
+	return l.WithOptions(zap.WrapCore(func(core zapcore.Core) zapcore.Core {
 		return zapcore.NewTee(core, sentryCore)
 	}))
 }
@@ -91,8 +93,5 @@ func New(opts ...Option) *zap.SugaredLogger {
 		opt(o)
 	}
 
-	l := newzap(o.stage)
-	addSentry(l, o)
-
-	return l.Sugar()
+	return createLoagger(o).Sugar()
 }
