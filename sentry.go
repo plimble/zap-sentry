@@ -94,11 +94,12 @@ func (c *core) Write(ent zapcore.Entry, fs []zapcore.Field) error {
 	clone := c.with(fs)
 
 	packet := &raven.Packet{
-		Message:   ent.Message,
-		Timestamp: raven.Timestamp(ent.Time),
-		Level:     ravenSeverity(ent.Level),
-		Platform:  _platform,
-		Extra:     clone.fields,
+		Message:     ent.Message,
+		Timestamp:   raven.Timestamp(ent.Time),
+		Level:       ravenSeverity(ent.Level),
+		Platform:    _platform,
+		Extra:       clone.fields,
+		Fingerprint: []string{ent.Message},
 	}
 
 	if !c.trace.Disabled {
