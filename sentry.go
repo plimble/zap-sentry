@@ -40,9 +40,10 @@ type client interface {
 
 // Configuration is a minimal set of parameters for Sentry integration.
 type Configuration struct {
-	DSN   string `yaml:"DSN"`
-	Tags  map[string]string
-	Trace trace
+	DSN     string `yaml:"DSN"`
+	Tags    map[string]string
+	Trace   trace
+	Release string
 }
 
 type trace struct {
@@ -56,6 +57,7 @@ func (c Configuration) Build() (zapcore.Core, error) {
 	if err != nil {
 		return zapcore.NewNopCore(), err
 	}
+	client.SetRelease(c.Release)
 	return newCore(c, client, zapcore.ErrorLevel), nil
 }
 
