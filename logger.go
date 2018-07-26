@@ -18,6 +18,7 @@ type Option func(o *option)
 type option struct {
 	stage        string
 	sentryDns    string
+	release      string
 	sentryTags   map[string]string
 	sentrtFields []zapcore.Field
 }
@@ -38,6 +39,12 @@ func WithSentry(sentryDNS string, tags map[string]string, fields []zapcore.Field
 func WithStage(stage string) Option {
 	return func(o *option) {
 		o.stage = stage
+	}
+}
+
+func WithRelease(release string) Option {
+	return func(o *option) {
+		o.release = release
 	}
 }
 
@@ -66,8 +73,9 @@ func createLoagger(o *option) *zap.Logger {
 	}
 
 	cfg := Configuration{
-		DSN:  o.sentryDns,
-		Tags: o.sentryTags,
+		DSN:     o.sentryDns,
+		Tags:    o.sentryTags,
+		Release: o.release,
 	}
 
 	sentryCore, err := cfg.Build()
